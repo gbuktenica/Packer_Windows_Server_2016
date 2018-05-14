@@ -1,0 +1,113 @@
+{
+    "variables": {
+        "name_prefix": "windows-server2016",
+        "vmware_ram_size": "12288",
+        "vmware_cpu": "2",
+        "vmware_disk_size": "41440",
+        "vmware_NetworkName": "ServerVLan",
+        "vmware_esxi_host_name": "10.1.1.1",
+        "vmware_esxi_user": "root",
+        "vmware_esxi_password": "Password1",
+        "vmware_esxi_datastore": "datastore1",
+        "vmware_vcenter_host_name": "10.1.1.2",
+        "vmware_vcenter_user": "administrator@vsphere.local",
+        "vmware_vcenter_password": "Password1",
+        "vmware_vcenter_datacenter": "Datacenter"
+    },
+    "builders": [
+        {
+            "vm_name": "{{user `name_prefix`}}-{{user `tagged_version`}}",
+            "type": "vmware-iso",
+            "iso_url": "ISO/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
+            "iso_checksum_type": "sha1",
+            "iso_checksum": "7ADC82E00F1367B43897BB969A75BBF96D46F588",
+            "headless": false,
+            "version": "13",
+            "winrm_timeout": "2h",
+            "boot_wait": "2m",
+            "shutdown_command": "C:\\windows\\system32\\sysprep\\Run-Sysprep.cmd",
+            "guest_os_type": "windows9srv-64",
+            "communicator": "winrm",
+            "winrm_username": "build",
+            "winrm_password": "Maxpower1!",
+            "skip_compaction": false,
+            "disk_size": "{{user `vmware_disk_size`}}",
+            "output_directory": "/packer-templates/{{user `name_prefix`}}-{{ timestamp }}",
+            "remote_type": "esx5",
+            "vnc_disable_password": true,
+            "remote_host": "{{user `vmware_esxi_host_name`}}",
+            "remote_username": "{{user `vmware_esxi_user`}}",
+            "remote_password": "{{user `vmware_esxi_password`}}",
+            "remote_datastore": "{{user `vmware_esxi_datastore`}}",
+            "floppy_files": [
+                "./floppy/Autounattend.xml",
+                "./floppy/Initialize-VMwareIso.ps1",
+                "./floppy/Enable-WinRm.ps1"
+            ],
+            "vmx_data": {
+                "gui.fitguestusingnativedisplayresolution": false,
+                "memsize": "{{user `vmware_ram_size`}}",
+                "numvcpus": "{{user `vmware_cpu`}}",
+                "scsi0.virtualDev": "lsisas1068",
+                "ethernet0.networkName": "{{ user `vmware_NetworkName` }}",
+                "ethernet0.present": "TRUE"
+            },
+            "vmx_data_post": {
+                "ethernet0.virtualDev": "vmxnet3",
+                "guestid": "windows9Server64Guest"
+            }
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "powershell",
+            "scripts": [
+                "./scripts/Install-VmwareTools.ps1"
+            ],
+            "valid_exit_codes": [
+                0,
+                1115,
+                1641,
+                3010
+            ]
+        },
+        {
+            "type": "file",
+            "source": "./scripts/Run-Sysprep.cmd",
+            "destination": "C:\\windows\\system32\\sysprep\\Run-Sysprep.cmd",
+            "pause_before": "120s"
+        },
+        {
+            "type": "file",
+            "source": "./scripts/sysprep-unattend.xml",
+            "destination": "c:\\Windows\\Temp\\unattend.xml"
+        },
+        {
+            "type": "powershell",
+            "scripts": [
+                "./scripts/Initialize-Provisioner.ps1"
+            ],
+            "valid_exit_codes": [
+                0,
+                5,
+                1115,
+                1641,
+                3010
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vsphere-template",
+            "only": [
+                "vmware-iso"
+            ],
+            "host": "{{user `vmware_vcenter_host_name`}}",
+            "username": "{{user `vmware_vcenter_user`}}",
+            "password": "{{user `vmware_vcenter_password`}}",
+            "datacenter": "{{user `vmware_vcenter_datacenter`}}",
+            "insecure": true,
+            "folder": "/packer-templates/{{user `name_prefix`}}"
+        }
+    ]
+}
