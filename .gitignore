@@ -1,0 +1,9 @@
+#Packer artefacts
+packer_cache/
+packerlog.txt
+
+#ISO files
+*.iso
+
+#Binary
+*.exe
