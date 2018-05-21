@@ -4,7 +4,7 @@
         "vmware_ram_size": "12288",
         "vmware_cpu": "2",
         "vmware_disk_size": "41440",
-        "vmware_NetworkName": "ServerVLan",
+        "vmware_NetworkName": "Network",
         "vmware_esxi_host_name": "10.1.1.1",
         "vmware_esxi_user": "root",
         "vmware_esxi_password": "Password1",
@@ -18,7 +18,7 @@
         {
             "vm_name": "{{user `name_prefix`}}-{{user `tagged_version`}}",
             "type": "vmware-iso",
-            "iso_url": "ISO/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
+            "iso_url": "http://iso.tas2.rocks/en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
             "iso_checksum_type": "sha1",
             "iso_checksum": "7ADC82E00F1367B43897BB969A75BBF96D46F588",
             "headless": false,
@@ -41,7 +41,6 @@
             "remote_datastore": "{{user `vmware_esxi_datastore`}}",
             "floppy_files": [
                 "./floppy/Autounattend.xml",
-                "./floppy/Initialize-VMwareIso.ps1",
                 "./floppy/Enable-WinRm.ps1"
             ],
             "vmx_data": {
@@ -53,8 +52,7 @@
                 "ethernet0.present": "TRUE"
             },
             "vmx_data_post": {
-                "ethernet0.virtualDev": "vmxnet3",
-                "guestid": "windows9Server64Guest"
+                "ethernet0.virtualDev": "vmxnet3"
             }
         }
     ],
@@ -62,7 +60,7 @@
         {
             "type": "powershell",
             "scripts": [
-                "./scripts/Install-VmwareTools.ps1"
+                "./scripts/Initialize-Provisioner.ps1"
             ],
             "valid_exit_codes": [
                 0,
@@ -70,6 +68,9 @@
                 1641,
                 3010
             ]
+        },
+        {
+            "type": "windows-restart"
         },
         {
             "type": "file",
@@ -81,19 +82,6 @@
             "type": "file",
             "source": "./scripts/sysprep-unattend.xml",
             "destination": "c:\\Windows\\Temp\\unattend.xml"
-        },
-        {
-            "type": "powershell",
-            "scripts": [
-                "./scripts/Initialize-Provisioner.ps1"
-            ],
-            "valid_exit_codes": [
-                0,
-                5,
-                1115,
-                1641,
-                3010
-            ]
         }
     ],
     "post-processors": [
