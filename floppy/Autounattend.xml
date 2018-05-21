@@ -3,7 +3,7 @@
     <settings pass="windowsPE">
         <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SetupUILanguage>
-                <UILanguage>en-AU</UILanguage>
+                <UILanguage>en-US</UILanguage>
             </SetupUILanguage>
             <InputLocale>en-US</InputLocale>
             <SystemLocale>en-US</SystemLocale>
@@ -52,13 +52,9 @@
                 </OSImage>
             </ImageInstall>
             <UserData>
-                <ProductKey>
-                    <Key>XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</Key>
-                    <WillShowUI>OnError</WillShowUI>
-                </ProductKey>
                 <AcceptEula>true</AcceptEula>
                 <FullName>Packer User</FullName>
-                <Organization>KineticIT</Organization>
+                <Organization>Packer</Organization>
             </UserData>
         </component>
     </settings>
@@ -70,7 +66,8 @@
             <ComputerName></ComputerName>
             <TimeZone>W. Australia Standard Time</TimeZone>
             <RegisteredOwner />
-            <ProductKey>XXXXX-XXXXX-XXXXX-XXXXX-XXXXX</ProductKey>
+            <!-- KMS client key -->
+            <ProductKey>DPCNP-XQFKJ-BJF7R-FRC8D-GF6G4</ProductKey>
         </component>
         <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <SkipAutoActivation>true</SkipAutoActivation>
@@ -91,21 +88,14 @@
             </AutoLogon>
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\Initialize-VMwareIso.ps1</CommandLine>
-                    <Description>Initialize</Description>
-                    <Order>1</Order>
-                    <RequiresUserInput>true</RequiresUserInput>
-                </SynchronousCommand>
-                <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\Enable-WinRM.ps1</CommandLine>
                     <Description>Enable Win RM</Description>
-                    <Order>2</Order>
+                    <Order>1</Order>
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>
                 <HideEULAPage>true</HideEULAPage>
-                <NetworkLocation>Work</NetworkLocation>
                 <HideLocalAccountScreen>true</HideLocalAccountScreen>
                 <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
                 <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
@@ -130,8 +120,8 @@
                     </LocalAccount>
                 </LocalAccounts>
             </UserAccounts>
-            <RegisteredOwner>KineticIT</RegisteredOwner>
-            <RegisteredOrganization>KineticIT</RegisteredOrganization>
+            <RegisteredOwner>Packer</RegisteredOwner>
+            <RegisteredOrganization>Packer</RegisteredOrganization>
         </component>
     </settings>
     <settings pass="offlineServicing">
