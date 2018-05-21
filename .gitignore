@@ -1,6 +1,6 @@
 #Packer artefacts
 packer_cache/
-packerlog.txt
+*.log.txt
 
 #ISO files
 *.iso
