@@ -3,9 +3,7 @@
     Configures a base Windows Server 2016 image
 
 .DESCRIPTION
-    This script configures Windows enough to allow puppet to manage the server.
-    It is used all cloud builders.
-    Cloud specific configuration should be in separate scripts.
+    This script configures Windows enough to allow Puppet or Ansible to configure.
 
  .EXAMPLE
     "scripts": [
@@ -28,7 +26,6 @@ Set-NetConnectionProfile -InterfaceAlias (Get-NetAdapter).name -NetworkCategory 
 New-NetFirewallRule -DisplayName "Allow Inbound RDP" -Direction Inbound -LocalPort 3389 -Protocol TCP -Action Allow
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name fDenyTSConnections -Value 0 -PropertyType DWord -Force
 
-# Ensure Sysprep keys are set correctly
-New-ItemProperty -Path "HKLM:\SYSTEM\Setup\Status\SysprepStatus" -Name CleanupState -Value 2 -PropertyType DWord -Force | Out-Null
-New-ItemProperty -Path "HKLM:\SYSTEM\Setup\Status\SysprepStatus" -Name GeneralizationState -Value 7 -PropertyType DWord -Force | Out-Null
-New-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform" -Name SkipRearm -Value 1 -PropertyType DWord -Force | Out-Null
+#Install VMware tools
+Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+choco install vmware-tools -y
