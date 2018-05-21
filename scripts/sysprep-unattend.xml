@@ -33,7 +33,7 @@
             <RegisteredOrganization>KineticIT</RegisteredOrganization>
             <TimeZone>W. Australia Standard Time</TimeZone>
             <!-- KMS client key -->
-            <ProductKey>DPCNP-XQFKJ-BJF7R-FRC8D-GF6G4</ProductKey>
+            <ProductKey>WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY</ProductKey>
         </component>
     </settings>
     <cpi:offlineImage cpi:source="wim:c:/tas_source/windowsserver2016/install.wim#Windows Server 2016 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
