@@ -20,6 +20,12 @@
         Copyright       : 2018 Kinetic IT Pty Ltd.
         License         : Apache License v 2.0
 #>
+# Disable IPv6
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\services\TCPIP6\Parameters" -Name DisabledComponents -PropertyType DWord -Value 0xffffffff -Force | Out-Null
+
+# Private connections can not have WinRM enabled
+Set-NetConnectionProfile -InterfaceAlias (Get-NetAdapter).name -NetworkCategory Private -Confirm:$false
+
 # Enable WinRM
 Set-NetFirewallRule -Name WINRM-HTTP-In-TCP-PUBLIC -RemoteAddress Any
 Enable-WSManCredSSP -Force -Role Server
@@ -40,8 +46,3 @@ net stop winrm
 
 # Automatically end user processes when the user logs off or the system is restarted.
 New-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name AutoEndTasks -Value 1 -PropertyType String
-
-# Restart to enable Win RM
-Write-Host "Sleeping for 1 minute, then restarting"
-Start-Sleep -s 60
-Restart-Computer -Force

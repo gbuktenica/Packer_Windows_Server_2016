@@ -19,9 +19,6 @@
 # Set Screen Resolution
 #Set-DisplayResolution -Width 1280 -Height 800 -Force
 
-# Set Network connection category to Private
-Set-NetConnectionProfile -InterfaceAlias (Get-NetAdapter).name -NetworkCategory Private -Confirm:$false
-
 # Enable RDP
 New-NetFirewallRule -DisplayName "Allow Inbound RDP" -Direction Inbound -LocalPort 3389 -Protocol TCP -Action Allow
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name fDenyTSConnections -Value 0 -PropertyType DWord -Force
